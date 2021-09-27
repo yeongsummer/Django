@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.decorators.http import require_POST, require_http_methods
+from django.views.decorators.http import require_POST, require_http_methods, require_safe
 from .models import Article
 from .forms import ArticleForm
 from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
+@require_safe
 def index(request):
     articles = Article.objects.order_by('-pk')
     context = {
@@ -14,6 +15,7 @@ def index(request):
     return render(request, 'articles/index.html', context)
 
 
+@require_safe
 def detail(request, pk):
     article = get_object_or_404(Article, pk=pk)
     context = {
@@ -58,7 +60,6 @@ def update(request, pk):
     else:
         form = ArticleForm(instance=article)
     context = {
-        'article': article,
         'form':form,
     }
     return render(request, 'articles/update.html', context)

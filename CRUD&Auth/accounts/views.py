@@ -4,11 +4,15 @@ from .forms import CustomUserChangeForm
 from django.contrib.auth import login as auth_login, update_session_auth_hash
 from django.contrib.auth import logout as auth_logout
 from django.views.decorators.http import require_POST, require_http_methods
+from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
 @require_http_methods(['GET', 'POST'])
 def signup(request):
+    if request.user.is_authenticated:
+        return redirect('articles:index')
+
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
@@ -25,6 +29,9 @@ def signup(request):
 
 @require_http_methods(['GET', 'POST'])
 def login(request):
+    if request.user.is_authenticated:
+        return redirect('articles:index')
+
     if request.method =='POST':
         form = AuthenticationForm(request, request.POST)
         if form.is_valid():
@@ -53,6 +60,7 @@ def delete(request):
     return redirect('articles:index')
 
 
+@login_required
 @require_http_methods(['GET', 'POST'])
 def update(request):
     if request.method == 'POST':
@@ -68,6 +76,7 @@ def update(request):
     return render(request, 'accounts/update.html', context)\
 
 
+@login_required
 @require_http_methods(['GET', 'POST'])
 def change_password(request):
     if request.method == 'POST':
