@@ -3,7 +3,6 @@ from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.forms import (
     AuthenticationForm, 
-    UserCreationForm, 
     PasswordChangeForm
 )
 from django.views.decorators.http import require_http_methods, require_POST
